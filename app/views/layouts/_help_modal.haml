@@ -1,0 +1,15 @@
+.modal-header
+  %a.btn.btn-mini.pull-right{ :'data-dismiss' => 'modal', :href => 'javascript://'}
+    %i.grcicon-x-grey
+  %h2=yield_content!(:modal_title) || "Help"
+
+.modal-body
+  =yield
+
+.modal-footer
+  .row-fluid
+    .span3
+      %h5 GRC Version #{CMS_CONFIG["CMS_APP_VERSION"]}
+    .span9
+      .confirm-buttons
+        %a.btn.btn-primary{"data-dismiss" => "modal", :href => 'javascript://'} Close

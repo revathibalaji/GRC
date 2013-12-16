@@ -1,0 +1,50 @@
+-model_name = controller_name.singularize
+-model_title = controller_name.singularize.titleize
+-instances = instance_variable_get('@' + model_name.pluralize)
+-quick_result ||= nil
+
+-if instances.empty?
+  .no-result.object-no-result
+    No results found
+-else
+  %ul.tree-structure.simple.single-row-tabs
+    -instances.each do |instance|
+      -instance_path = self.send("flow_#{model_name}_path", instance)
+      -instance_tooltip_path = self.send("tooltip_flow_#{model_name}_path", instance)
+      -if quick_result
+        =render 'base_objects/quick_result', { :item => instance }
+      -else
+        %li{ :class => instance.class.name.downcase }
+          %a{ :href => instance_path, :'data-popover-href' => instance_tooltip_path, :'data-popover-trigger' => 'sticky-hover' }
+            .row-fluid
+              -if instance.is_a?(Program)
+                .span11
+                  .item-identifier
+                    %span.title
+                      =instance.title
+                    -if instance.company_controls?
+                      %i.grcicon-control-color.short
+                      %span.code
+                        %span.text-compliance=instance.slug
+                    -else
+                      %i.grcicon-program-color.short
+                      %span.code
+                        =instance.slug
+                .span1
+                  .objects-count.pull-right
+                    -last_cycle = instance.cycles.select{|c| !c.start_at.nil? && c.start_at - 30 < Date.today }.sort_by{|c| c.start_at}.last
+                    -if last_cycle.present?
+                      -if !last_cycle.complete && (last_cycle.report_due_at.nil? || last_cycle.report_due_at - 3 > Date.today)
+                        %i.grcicon-eye-inprogress
+                      -elsif !last_cycle.report_due_at.nil? && !last_cycle.complete && last_cycle.report_due_at - 3 <= Date.today
+                        %i.grcicon-eye-danger
+                      -elsif last_cycle.complete
+                        %i.grcicon-eye-completed
+                    
+              -else
+                .span12
+                  .item-identifier
+                    %span.title
+                      =instance.title
+                    %span.code
+                      =instance.slug

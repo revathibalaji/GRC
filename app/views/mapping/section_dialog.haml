@@ -1,0 +1,15 @@
+.modal-header
+  %a.close.btn.btn-mini.pull-right{"data-dismiss" => "modal"}
+    %i.grcicon-x-grey
+  %h2 Controls Mapped to #{@section.slug}
+
+-ccontrols = @section.consolidated_controls
+-rcontrols = @section.controls
+.modal-body
+  .row-fluid
+    -if ccontrols.empty? && rcontrols.empty?
+      =render :partial => 'section_dialog_na', :locals => { :section => @section }
+    -else
+      =render :partial => 'section_dialog_controls', :locals => { :ccontrols => ccontrols, :rcontrols => rcontrols }
+
+.modal-footer

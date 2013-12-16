@@ -1,0 +1,29 @@
+.container-fluid
+  .row-fluid
+    .span4
+    .span4
+      %section#LoginBox.widget
+        %section.header
+          %h2
+          %img{:height => "41", :src => "/images/fixnix_logo.png", :width => "60"} Signup to FixNix GRC
+            
+        %section.content
+          .flash!=[:error, :warning, :notice].map { |type| content_tag(:div, flash[type], :class => "message #{type}") if flash[type] }.join
+  
+          =form_for :signup, :url => signup_path(@signup) do |f|
+            .span12
+              =f.label 'Email'
+              %br/
+              =f.text_field :email
+            .span12
+              =f.label 'Password'
+              %br/
+              =f.password_field :password
+            .span12
+              =f.label 'Repeat Password'
+              %br/
+              =f.password_field :password_confirmation
+            .span6
+              .pull-right
+                %button.btn.btn-success.pull-right{:type => "submit"} Signup
+    .span4

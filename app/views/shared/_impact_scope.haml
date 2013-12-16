@@ -1,0 +1,114 @@
+%section#impactscopewidget.widget
+  %section.header
+    %h2
+      Impact / Scope
+    %a.pull-right.btn.btn-mini{"data-toggle" => "modal", :href => "#comingsoonModal"}
+      %i.grcicon-help-black
+    %nav
+      %a.accordion-toggle.widgetbtn{"data-toggle" => "collapse", :href => "#impactScopeInfo"}
+        %i.grcicon-enlarge-grey
+  .filter
+    .row-fluid
+      .span12
+        %input.ui-corner-all.widgetsearch{:placeholder => "Search", :type => "text"}
+        
+  %section.content.information
+    / TABS
+    .row-fluid
+      .span6
+        %label
+          %strong Systems Impacted
+        %strong 239
+        Systems
+      .span6
+        .row-fluid
+          .span2
+          .span4
+            %label
+              %strong Verified
+            .badge.badge-success 197
+          .span3
+            %label
+              %strong Pend
+            .badge.badge-warning 33
+          .span3
+            %label
+              %strong Out
+            .badge.badge-important 9
+    #impactScopeInfo.row-fluid.in
+      .span12
+        %hr.hr-widget/
+        %ul#quicklinks.nav.nav-tabs
+          %li
+            %a{"data-toggle" => "tab", :href => "#impactscope-products"} Products
+          %li
+            %a{"data-toggle" => "tab", :href => "#impactscope-bizarea"} Biz Area
+          %li.active
+            %a{"data-toggle" => "tab", :href => "#impactscope-bizprocess"} Process
+          %li
+            %a{"data-toggle" => "tab", :href => "#impactscope-systems"} Systems
+        / TAB CONTENT
+        .tab-content
+          #impactscope-products.tab-pane
+            %ul
+              %li.controlSlot.ui-draggable{"data-toggle" => "modal", :href => "#referenceSelectorModal"}
+                .controls-group
+                  .controls-type 2010
+                  .controls-subtype PDF
+                  .controls-subgroup Privacy Report
+          #impactscope-bizarea.tab-pane
+            %ul
+              %li.controlSlot.ui-draggable{"data-toggle" => "modal", :href => "#referenceSelectorModal"}
+                .controls-group
+                  .controls-type 2010
+                  .controls-subtype PDF
+                  .controls-subgroup Privacy Report
+          #impactscope-bizprocess.tab-pane.active
+            %ul
+              %li.controlSlot.ui-draggable{"data-toggle" => "modal", :href => "#referenceSelectorModal"}
+                .controls-group
+                  .controls-type 2010
+                  .controls-subtype PDF
+                  .controls-subgroup Privacy Report
+              %li.controlSlot.ui-draggable{"data-toggle" => "modal", :href => "#referenceSelectorModal"}
+                .controls-group
+                  .controls-type 2010
+                  .controls-subtype PDF
+                  .controls-subgroup Privacy Report
+              %li.controlSlot.ui-draggable{"data-toggle" => "modal", :href => "#referenceSelectorModal"}
+                .controls-group
+                  .controls-type 2010
+                  .controls-subtype PDF
+                  .controls-subgroup Privacy Report
+              %li.controlSlot.ui-draggable{"data-toggle" => "modal", :href => "#referenceSelectorModal"}
+                .controls-group
+                  .controls-type 2010
+                  .controls-subtype PDF
+                  .controls-subgroup Privacy Report
+          #impactscope-systems.tab-pane
+            %ul
+              %li.controlSlot.ui-draggable{"data-toggle" => "modal", :href => "#referenceSelectorModal"}
+                .controls-group
+                  .controls-type 2010
+                  .controls-subtype PDF
+                  .controls-subgroup Privacy Report
+      / OTHER CONTENT
+      %hr.hr-widget/
+      .row-fluid
+        .span3
+          %label{:for => "control-effectivedate"}
+            %strong> Products
+            \: 3
+        .span3
+          %label{:for => "control-effectivedate"}
+            %strong> Biz Areas
+            \: 2
+        .span3
+          %label{:for => "control-effectivedate"}
+            %strong> Process
+            \: 9
+        .span3
+          %label{:for => "control-effectivedate"}
+            %strong> Systems
+            \: 239
+

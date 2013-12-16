@@ -1,0 +1,29 @@
+-is_root = true
+-expand_this = true
+
+%ul.tree-structure
+  -directives.each do |directive|
+    -sections = directive.sections
+    -if params[:s].present? && params[:search_sections].present?
+      -sections = sections.db_search(params[:s])
+    -has_children = sections.count > 0
+
+    %li{ :class => directive.class.name.downcase, :'data-object-id' => directive.id, :'data-object-type' => directive.class.name.underscore }
+      .item-main
+        .openclose{ :class => [!has_children && 'lastchild', is_root && 'active'] }
+        .item-title
+          .row-fluid
+            =render :partial => 'object_leaf', :locals => { :instance => directive, :object_type => 'governance', :object_icon => "grcicon-#{directive.meta_kind}" }
+            .span2
+              .objects-count
+                %a.sections-count
+                  %i.grcicon-section-color
+                  =sections.count
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          .item-actions
+            %a.btn.btn-mini{ "rel" => "tooltip", "data-placement" => "top", "title" => "Go to this object's page", :href => flow_directive_path(directive.id) }
+              %i.grcicon-goto
+      .item-content{ :class => expand_this && 'in' }
+        -if has_children
+          %ul.tree-structure
+            =render :partial => 'directives/sections', :locals => { :sections => sections, :show_edit => false, :with_controls => true }

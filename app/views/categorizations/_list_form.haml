@@ -1,0 +1,69 @@
+-content_for :modal_title do
+  Select Categories
+
+-content_for :modal_help, :select_categorizations
+
+%script#category_option{ :type => 'text/html', :'data-prefix' => 'category' }
+  %li{ :'data-id' => '<%= category.id %>', :'data-name' => '<%= category.name %>', :'data-parent_name' => '<%= category.parent_name %>' }
+    .row-fluid
+      .span8
+        .object-info
+          %span.name <%= category.name %>
+          %span.option <%= category.parent_name || '&nbsp;' %>
+        
+      .span4.actions
+        .pull-right
+          %a.widgetbtn.btn.btn-mini{:href => edit_flow_category_path('<%=category.id%>'), :'data-toggle' => 'modal-ajax-listeditform', :'data-selector-target' => '.source, .target' }
+            %i.grcicon-edit
+          %a.widgetbtn.btn.btn-mini.add-me{:href => "#", :'data-toggle' => 'selector-list-select'}
+            %i.grcicon-chevron-right
+
+%script#category_option_data{ :type => 'text/html' }
+  .object-info
+    %span.name <%= category.name %>
+    %span.option <%= category.parent_name || '&nbsp;' %>
+
+%script#categorization_selected{ :type => 'text/html', :'data-mappings' => 'object:category', :'data-member' => 'categorization' }
+  %li{ :'data-id' => '<%= id %>', :'data-object-id' => '<%= category.id %>' }
+    .row-fluid
+      .span6.object_info{ :'data-template-id' => 'category_option_data' }
+      .span6.actions
+        %span.state
+        .pull-right
+          %input{ :type => 'hidden', :name => 'items[<%= id %>][id]', :value => '<% if (id.toString().substr(0,3) != "new") { %><%= id %><% } %>'.html_safe }
+          %input{ :type => 'hidden', :name => 'items[<%= id %>][categorizable_type]', :value => object.class.name }
+          %input{ :type => 'hidden', :name => 'items[<%= id %>][categorizable_id]', :value => object.id }
+          %input{ :type => 'hidden', :name => 'items[<%= id %>][category_id]', :value => '<%= category.id %>' }
+          %input._destroy{ :type => 'hidden', :name => 'items[<%= id %>][_destroy]', :value => '' }
+          %a.widgetbtn.btn.btn-mini{ :href => edit_flow_category_path('<%=category.id%>'), :'data-toggle' => 'modal-ajax-listeditform', :'data-selector-target' => '.source, .target' }
+            %i.grcicon-edit
+          %a.widgetbtn.btn.btn-mini{ :href => '#', :'data-toggle' => 'selector-list-remove' }
+            %i.grcicon-remove
+
+.row-fluid.modal-source
+  .span6
+    .row-fluid
+      .span7
+        %h3
+          Add Category
+          %a.widgetbtn.widgetbtnselector.btn.btn-add{ :href => new_flow_category_path(:scope_id => scope_id), :'data-toggle' => 'modal-ajax-listnewform', :'data-selector-target' => '.source, .target', :'data-modal-class' => 'modal-wide'  }
+            %i.grcicon-add
+      .span5
+        %input.widgetsearch.input-block-level{:type => "text", :placeholder => "Search Categories"}
+
+    .filter-block
+      .row-fluid
+        .span12
+          .tabbable.tabs-left
+            .tab-content
+              #category1.tab-pane.active
+                .people-list
+                  %ul.source{ :'data-list-data-href' => flow_categories_path(:scope_id => scope_id, :format => :json), :'data-template-id' => 'category_option' }
+
+  .span6
+    %h3
+      Categories for this #{object.class.name.titleize.downcase}
+
+    .people-list.currentlist
+      %ul.target{ :'data-list-data-href' => flow_categorizations_path(:object_type => object.class.name, :object_id => object.id, :scope_id => scope_id), :'data-template-id' => 'categorization_selected' }
+

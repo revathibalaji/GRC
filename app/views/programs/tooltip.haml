@@ -1,0 +1,92 @@
+-content_for :tooltip_title do
+  .row-fluid
+    .span10
+      %h3
+        %i.grcicon-program-color
+        %span.title
+          =program.title
+        %span.code
+          =program.slug
+    .span2
+      %a.btn.btn-mini.btn-primary.pull-right{:href => flow_program_path(program), :rel => "tooltip", :title => "View/Edit Program"}
+        %i.grcicon-goto-white
+
+
+.popover-inner-content
+  .row-fluid
+    .span12
+      %h4 Description
+      -if program.description != ""
+        =display_as_html program.description
+      -else
+        .rtf
+          %p.no-data No description available
+  .row-fluid
+    .span6
+      -if !program.company_controls?
+        %h4
+          Audit Status
+        -last_cycle = program.cycles.select{|c| !c.start_at.nil? && c.start_at - 30 < Date.today }.sort_by{|c| c.start_at}.last
+        -if last_cycle.present?
+          %p.audit-status
+            -if !last_cycle.complete && (last_cycle.report_due_at.nil? || last_cycle.report_due_at - 3 > Date.today)
+              %i.grcicon-eye-inprogress
+              %span.status.inprogress In Progress
+            -elsif !last_cycle.report_due_at.nil? && !last_cycle.complete && last_cycle.report_due_at - 3 <= Date.today
+              %i.grcicon-eye-danger
+              %span.status.danger=last_cycle.report_due_at >= Date.today ? "Due Soon" : "Overdue"
+            -elsif last_cycle.complete
+              %i.grcicon-eye-completed
+              %span.status.completed Completed
+            %br
+            =last_cycle.start_at.nil? || last_cycle.start_at > Date.today ? "Starts " : "Started "
+            =last_cycle.start_at == Date.today ? "today" : "on: " + last_cycle.start_at.strftime("%m/%d/%Y") rescue "on: Not set"
+            %br
+            =last_cycle.end_at.nil? || last_cycle.end_at > Date.today ? "Ends " : "Ended "
+            =last_cycle.end_at == Date.today ? "today" : "on: " + last_cycle.end_at.strftime("%m/%d/%Y") rescue "on: Not set"
+            %br
+            %strong
+              ="Report due " + (last_cycle.report_due_at == Date.today ? "today" : "on: " + last_cycle.report_due_at.strftime("%m/%d/%Y"))rescue "Report due on: Not set"
+        -else
+          / no-icon case
+          %p.audit-status
+            %span.status.none No scheduled audits
+
+      -else
+        &nbsp;
+    .span6
+      %h4
+        -directive = params[:directive_id].present? ? program.directives.select{|d| d.id.to_s == params[:directive_id]}.first : nil
+        -controls = directive.present? ? directive.controls : program.directives.collect{|d| d.controls}.flatten
+        Controls #{directive.present? ? "from " + directive.title : ""} (#{controls.length})
+        -mapped_controls = controls.reject{|c| c.linked_sections.empty?}
+        -unmapped_controls = controls.select{|c| c.linked_sections.empty?}
+        .progress
+          -if controls.empty?
+            .empty-progress No mapped controls
+          -else
+            .bar.bar-success{:style => "width:" + (mapped_controls.length * 100 / controls.length).to_s + "%", :rel => "tooltip", :title => mapped_controls.length.to_s + " Done"}=mapped_controls.length
+            .bar.bar-warning{:style => "width:" + (unmapped_controls.length * 100 / controls.length).to_s + "%", :rel => "tooltip", :title => unmapped_controls.length.to_s + " Pending"}=unmapped_controls.length
+      = directive.present? ? '(' + ((directive.total_controls.count.to_f / program.total_controls.count.to_f).round(2) * 100).to_i.to_s + "% of this program)" : ''
+      -directives = program.directives
+      -if !program.company_controls?
+        %h4
+          Directives (#{directives.length})
+        %i.grcicon-regulation-color
+        =directives.select{|d| d.meta_kind == :regulation }.length
+        &nbsp;
+        %i.grcicon-contract-color
+        =directives.select{|d| d.meta_kind == :contract }.length
+        &nbsp;
+        %i.grcicon-policy-color
+        =directives.select{|d| d.meta_kind == :policy }.length
+
+-if params[:directive_id].present?
+  -program_directive = program.program_directives.where(:directive_id => params[:directive_id]).first
+  -if program_directive
+    .row-fluid
+      .span12.popoverfooter
+        .pull-right
+          %a{ :href => flow_program_directive_path(program_directive), :'data-remote' => true, :'data-method' => 'DELETE', :'data-ajax-complete' => 'refresh' }
+            Unlink from
+            =program.slug

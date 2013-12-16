@@ -1,0 +1,77 @@
+-instance = @directive
+-@title = "GRC #{instance.meta_kind.to_s.titleize}: #{instance.title}"
+
+-content_for :header do
+  %ul.breadcrumbs
+    %li=link_to 'Dashboard', programs_dash_path
+    -if instance.programs.count == 1
+      -program = instance.programs.first
+      %li=link_to program.title, flow_program_path(program)
+    %li=instance.title
+
+  %h1.governance
+    .grcobject.governance{:rel => "tooltip", :'data-placement'=>"bottom", :title => instance.meta_kind.to_s.titleize}
+      %i{ :class => "grcicon-#{instance.meta_kind}" }
+    %span
+      %strong=instance.meta_kind.to_s.titleize
+      \: 
+    =instance.title
+
+-content_for :page_help, 'directive'
+
+-content_for :subheader_extras do
+  %ul.actions.pull-right
+    %li
+      %a{:href => edit_flow_directive_path(instance), :'data-toggle' => 'modal-ajax-form', :'data-modal-reset' => 'reset', :'data-form-target' => 'refresh', :'data-modal-class' => 'modal-wide', :title => "Edit #{instance.meta_kind.to_s.titleize}"}
+        %i.grcicon-edit
+        %span Edit #{instance.meta_kind.to_s.titleize}
+    %li.btn-group
+      %a.dropdown-toggle{:href => '#', :'data-toggle' => 'dropdown'}
+        %i.grcicon-imp-exp
+        %span Import/Export
+        %span.caret
+      %ul.dropdown-menu
+        %li.divider
+        -unless instance.company_controls?
+          %li
+            %a{:href => import_flow_directive_path(instance)}
+              Import #{instance.section_meta_kind.to_s.pluralize.titleize}
+        %li
+          %a{:href => import_controls_flow_directive_path(instance)}
+            Import Controls
+        %li.divider
+        -unless instance.company_controls?
+          %li
+            %a{:href => export_flow_directive_path(instance, :format => :html), :'data-toggle' => 'modal-ajax'}
+              Export #{instance.section_meta_kind.to_s.pluralize.titleize}
+        %li
+          %a{:href => export_controls_flow_directive_path(instance, :format => :html), :'data-toggle' => 'modal-ajax'}
+            Export Controls
+
+-content_for :subheader_plus do
+  %a.navbarplus.fltrt{ :href => new_flow_directive_path, :'data-toggle' => 'modal-ajax-form', :'data-form-target' => 'redirect', :'data-modal-reset' => 'reset', :'data-modal-class' => 'modal-wide' }
+
+.container-fluid
+  #columns.row-fluid{ :'data-resize' => "true" }
+    #middle-column.span8.widget-area
+      =render :partial => 'directives/main',
+              :layout => 'layouts/widget_box',
+              :locals => { :directive => instance, :widget_class => "governance" }
+      -unless instance.company_controls?
+        =render :partial => 'shared/add_widget_section'
+    #right-column.span4.widget-area
+      =render :partial => 'directives/info',
+              :layout => 'layouts/widget_box',
+              :locals => { :directive => instance, :widget_class => 'governance'}
+      =render :partial => 'directives/more_info',
+              :layout => 'layouts/widget_box',
+              :locals => { :directive => instance, :widget_class => 'related business'}
+      -#if (instance.cycles.length != 0)
+        =render :partial => 'directives/audit_cycles',
+                :layout => 'layouts/widget_box',
+                :locals => { :directive => instance }
+      =render :partial => 'directives/programs',
+              :layout => 'layouts/widget_box',
+              :locals => { :directive => instance, :widget_class => 'governance' }
+      -unless instance.company_controls?
+        =render :partial => 'shared/add_widget_section'

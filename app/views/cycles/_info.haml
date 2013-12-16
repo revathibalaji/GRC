@@ -1,0 +1,74 @@
+-content_for :widget_title do
+  Audit Info
+
+-content_for :widget_id, "cycle_info_widget"
+
+-content_for :widget_help, 'cycle_info'
+
+%ul.info-list
+  %li.float-element
+    %label
+      Title
+    %span
+      %strong=cycle.title
+  %li.float-element
+    %label
+      Status
+    %span
+      %strong
+        -if cycle.complete
+          Complete (started #{days_ago_in_words cycle.start_at})
+        -else
+          -if cycle.start_at == Time.zone.now.to_date
+            Started today
+          -elsif cycle.start_at < Time.zone.now.to_date
+            Started #{days_ago_in_words cycle.start_at} ago
+          -else
+            Starting in #{days_ago_in_words cycle.start_at}
+
+          -if cycle.end_at
+            %br
+            Ends on #{cycle.end_at.strftime("%m/%d/%y")}
+          -if cycle.report_due_at
+            %br
+            -if cycle.report_due_at == Time.zone.now.to_date
+              Report due today
+            -else
+              Report due on #{cycle.report_due_at.strftime("%m/%d/%Y")}      
+
+
+
+  -if cycle.audit_firm != ""
+    %li.float-element
+      %label
+        Audit Firm
+      %span
+        =cycle.audit_firm
+  -if cycle.audit_lead != ""
+    %li.float-element
+      %label
+        Audit Lead
+      %span
+        =cycle.audit_lead
+  %li.float-element
+    %label
+      Created by
+    %span
+      -if !cycle.created_by.nil?
+        =cycle.created_by.display_name
+      -else
+        unknown
+  %li
+    %label
+      Description
+    -if cycle.description != ""
+      =display_as_html cycle.description
+    -else
+      .rtf
+        %p.no-data no description available
+
+%section.footer
+  .row-fluid
+    .span6
+      %p.footer-left
+        Created: #{cycle.created_at.strftime("%m/%d/%y")}

@@ -1,0 +1,16 @@
+-content_for :widget_title do
+  Import Controls
+
+-content_for :widget_help, 'controls_import'
+
+=form_tag '', :class => 'import', :multipart => true, :remote => true, :'data-type' => 'html', :'data-update-target' => '#results-container' do
+
+  %label(for="file")
+    %strong
+      File to Upload
+  =file_field_tag "upload"
+  =submit_tag "Upload and Review", :class => 'btn btn-primary'
+  %a{ :href => "/help/controls_import", :target => '_blank', :class => "import-help", :'data-toggle' => 'modal-ajax'}
+    View Help
+
+  #results-container

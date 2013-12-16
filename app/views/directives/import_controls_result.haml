@@ -1,0 +1,30 @@
+-columns = %w(slug title description kind means start_date stop_date url systems processes categories assertions documentation_description verify_frequency documents people_responsible people_accountable key_control active fraud_related)
+
+-header_overrides = { :documents => "References", :systems => "Systems", :processes => "Processes", :categories => "Categories", :assertions => "Assertions", :people_responsible => "People:Responsible", :people_accountable => "People:Accountable" }
+
+-width_pcts = %w(5 5 10 5 5 5 5 5 5 5 5 5 5 5 5 5 5 3 3 3)
+
+-content_for :import_cancel_path, flow_directive_path(@directive)
+
+-content_for :import_success do
+  Import of
+  =link_to @directive.title, flow_directive_path(@directive)
+  controls is done.
+
+-content_for :import_information do
+  .row-fluid
+    .span6
+      %h4 Compliance Program
+      .row-fluid
+        .span10.control-group
+          %label{:for => "slug"} Regulation / Contract / Policy
+          %input#slug.span12{:disabled => "disabled", :value => @directive.slug, :type => "text"}/
+          %br/
+
+        .span2
+          %label{:for => "version"} Version
+          %input#version.span12{:disabled => "disabled", :value => @directive.version, :type => "text"}
+
+=render :partial => 'shared/import_table',
+        :locals => { :columns => columns, :header_overrides => header_overrides, :width_pcts => width_pcts, :converter => @import }
+

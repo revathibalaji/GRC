@@ -1,0 +1,42 @@
+-content_for :modal_title do
+  -if f.object.new_record?
+    Create a new category
+  -else
+    Edit category
+
+-if !f.object.new_record?
+  -content_for :modal_delete_path, delete_flow_category_path(f.object)
+
+-if f.object.scope_id.present?
+  =f.hidden_field :scope_id
+-else
+  .row-fluid
+    .span4
+      %label Scope
+      %select(name='category[scope_id]')
+        %option{ :value => Control::CATEGORY_TYPE_ID } Control Type
+        %option{ :value => Control::CATEGORY_ASSERTION_TYPE_ID } Control Assertion
+        %option{ :value => System::CATEGORY_TYPE_ID } System Type
+
+.row-fluid
+  .span4
+    %label Type
+    .controls
+      %select.input-block-level(name='category[parent_id]')
+        %option{ :value => '' } &lt;New root object&gt;
+        -categories = Category.where(:parent_id => nil).where(Category.arel_table[:id].not_eq(f.object.id))
+        -if f.object.scope_id.present?
+          -categories = categories.where(:scope_id => f.object.scope_id)
+        -else
+          -categories = categories.where(:scope_id => Control::CATEGORY_TYPE_ID)
+
+        -categories.each do |category|
+          %option{ :value => category.id, :selected => (category.id == f.object.parent_id) }=category.name
+  .span6
+    .input-holder{ :class => error_class(f, :name) }
+      =f.label :name, 'Category Name'
+      =f.text_field :name, :class => 'input-block-level', :placeholder => 'Category Name'
+  .span2
+    .input-holder{ :class => error_class(f, :required) }
+      =f.label :required, 'Required'
+      =f.check_box :required

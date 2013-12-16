@@ -1,0 +1,16 @@
+-# locals: controls, prefix
+
+%h3.tab-title
+  Other controls linked to this control
+
+%ul.tree-structure
+  =walk_slug_tree(Directive.slugtree(controls), :li_class => 'control') do |item, step|
+    -content_id = "content_#{rand(36**8).to_s(36)}" # unique ID for toggle
+    .item-main
+      .openclose{ :class => 'lastchild' }
+      .item-title
+        .row-fluid
+          =render :partial => 'object_leaf', :locals => { :instance => item }
+        .item-actions
+          %a.btn.btn-mini.halfopacity{ "rel" => "tooltip", "data-placement" => "left", "title" => "Go to this object's page", :href => flow_control_path(item.id) }
+            %i.grcicon-arrowright-black

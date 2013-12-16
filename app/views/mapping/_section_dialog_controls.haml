@@ -1,0 +1,73 @@
+=form_for section, :url => mapping_update_path(section), :remote => true, :class => 'form-inline' do |f|
+  .modal-header
+    .pull-right
+      %a.widgetbtn.btn.btn-mini{"data-toggle" => "modal", :href => "#comingsoonModal"}
+        %i.grcicon-help-black
+      %a.widgetbtn.btn.btn-mini{"data-dismiss" => "modal", :href => "#comingsoonModal"}
+        %i.grcicon-x-grey
+    
+    %h2
+      Controls Mapped to this Section
+      %small #{section.slug}
+
+  .modal-body
+
+    -rcontrols.each do |control|
+      %section.modal-section    
+        .row-fluid
+          .span6.control-group
+            %ul.tree-structure
+              %li
+                .item-main
+                  .item-title
+                    .row-fluid
+                      .span11
+                        .oneline.expand-on-hover
+                          %span.title
+                            =control.title
+                          %span.code
+                            =control.slug
+                          %span.description-inline
+                            %i.description-inline=sanitize(control.description, :tags => []) if local_assigns[:description_inline].nil?
+                        .description
+                          =display_as_html(control.description)
+                    .item-actions
+                      %a.btn.btn-mini.pull-right.unmapbtn{:href => mapping_map_rcontrol_path(:section => section.id, :rcontrol => control.id, :u => 1), :'data-remote' => true, :'data-method' => 'post', :'data-toggle' => 'unmap-rcontrol', :rel => "tooltip", :title => "Unmap"}
+                        %i.grcicon-remove
+          .span6
+            %ul.tree-structure
+              -control.implementing_controls.each do |ccontrol|
+                %li
+                  .item-main
+                    .item-title
+                      .row-fluid
+                        .span11
+                          .oneline.expand-on-hover
+                            %span.title
+                              =ccontrol.title
+                            %span.code
+                              =ccontrol.slug
+                            %span.description-inline
+                              %i.description-inline=sanitize(ccontrol.description, :tags => []) if local_assigns[:description_inline].nil?
+                          .description
+                            =display_as_html(ccontrol.description)
+                      .item-actions
+                        %a.btn.btn-mini.unmapbtn.pull-right{:href => mapping_map_ccontrol_path(:rcontrol => control.id, :ccontrol => ccontrol.id, :u => 1), :'data-remote' => true, :'data-method' => 'post', :'data-toggle' => 'unmap-ccontrol', :rel => "tooltip", :title => "Unmap"}
+                          %i.grcicon-remove
+                      
+                        
+    .row-fluid
+      .span12
+        =f.label :notes, "Note", :class => :cleanlabel
+        .wysiwyg-area
+          =f.text_area :notes, :class => [:wysihtml5, :span12, :note], :rows => 3
+
+    =f.hidden_field :na
+
+  .modal-footer
+    .row-fluid
+      .span12
+        .confirm-buttons
+          =f.submit pat(:done), :class => 'btn btn-primary'          
+
+=render :partial => "shared/wysihtml5"

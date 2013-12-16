@@ -1,0 +1,15 @@
+-content_for :page_help, (@is_biz_process ? 'processes_import' : 'systems_import')
+
+-content_for :header do
+
+  %ul.breadcrumbs
+    %li=link_to 'ADMIN', admin_dash_path
+    %li Import #{@is_biz_process ? "Processes" : "Systems"}
+
+  %h1
+    Import #{@is_biz_process ? "Processes" : "Systems"}
+
+.container-fluid
+  .row-fluid
+    =render :partial => 'systems/import',
+            :layout => 'layouts/widget_box'

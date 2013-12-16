@@ -1,0 +1,114 @@
+-content_for :modal_title do
+  Select People
+
+-content_for :modal_help, :select_people
+
+%script#person_option{ :type => 'text/html', :'data-prefix' => 'person' }
+  %li{ :'data-id' => '<%= person.id %>', :'data-name' => '<%= person.name %>', :'data-company' => '<%= person.company %>', :'data-email' => '<%= person.email %>' }
+    .row-fluid
+      .span9
+        .object-info
+          %span.name <%= person.name && person.name.trim() || person.email %>
+          %span.option <%= person.company %>
+        
+      .span3.actions
+        .pull-right
+          %a.widgetbtn.btn.btn-mini{:href => edit_flow_person_path('<%=person.id%>'), :'data-toggle' => 'modal-ajax-listeditform', :'data-selector-target' => '.source, .target' }
+            %i.grcicon-edit
+          %a.widgetbtn.add-me.btn.btn-mini{:href => "#", :'data-toggle' => 'selector-list-select'}
+            %i.grcicon-chevron-right
+
+%script#person_option_data{ :type => 'text/html' }
+  .object-info
+    %span.name <%= person.name && person.name.trim() || person.email %>
+    %span.option <%= person.company %>
+  
+
+%script#object_person_selected{ :type => 'text/html', :'data-mappings' => 'object:person', :'data-member' => 'object_person', :'data-role' => 'accountable', :'data-start_date' => '', :'data-stop_date' => '' }
+  %li{ :'data-id' => '<%= id %>', :'data-object-id' => '<%= person.id %>' }
+    .row-fluid{ :'data-toggle' => 'collapse-additional' }
+      .span6.object_info{ :'data-template-id' => 'person_option_data' }
+      .span6.actions
+        %span.state
+        .pull-right
+          %input{ :type => 'hidden', :name => 'items[<%= id %>][id]', :value => '<% if (id.toString().substr(0,3) != "new") { %><%= id %><% } %>'.html_safe }
+          %input{ :type => 'hidden', :name => 'items[<%= id %>][personable_type]', :value => object.class.name }
+          %input{ :type => 'hidden', :name => 'items[<%= id %>][personable_id]', :value => object.id }
+          %input{ :type => 'hidden', :name => 'items[<%= id %>][person_id]', :value => '<%= person.id %>' }
+          %input._destroy{ :type => 'hidden', :name => 'items[<%= id %>][_destroy]', :value => '' }
+          %a.widgetbtn.btn.btn-mini{ :href => edit_flow_person_path('<%=person.id%>'), :'data-toggle' => 'modal-ajax-listeditform', :'data-selector-target' => '.source, .target' }
+            %i.grcicon-edit
+          %a.widgetbtn.btn.btn-mini{ :href => '#', :'data-toggle' => 'selector-list-remove' }
+            %i.grcicon-remove
+        
+        .pull-right.role-btn
+          .btn-group
+            %a.btn.btn-success.btn-mini.dropdown-toggle{"data-toggle" => "dropdown"}
+              <%= (role && role.length > 0) ? role[0].toUpperCase() + role.substr(1) : "Select Role" %>
+              
+            %input{ :type => 'hidden', :name => 'items[<%= id %>][role]', :value => '<%= role %>' }
+            %ul.dropdown-menu{ :'data-toggle' => 'dropdown-select-list' }
+              %li
+                %a#makeAccountable{ :'data-value' => 'accountable', :href => '#' }
+                  is Accountable for
+              %li
+                %a#makeResponsible{ :'data-value' => 'responsible', :href => '#' }
+                  is Responsible for
+        
+    .row-fluid.additional
+      .span6
+      .span3
+        %label Start Date (Optional)
+        %input.span12.date{:type => "text", :placeholder => "MM/DD/YYYY", :name => 'items[<%= id %>][start_date]', :'data-toggle' => 'datepicker', :value => '<%= this.format_date(start_date) %>'}
+      .span3
+        %label Stop Date (Optional)
+        %input.span12.date{:type => "text", :placeholder => "MM/DD/YYYY", :name => 'items[<%= id %>][stop_date]', :'data-toggle' => 'datepicker', :value => '<%= this.format_date(stop_date) %>'}
+
+.row-fluid.modal-source
+  .span5
+    .row-fluid
+      .span7
+        %h3
+          Add Person
+          %a.widgetbtn.widgetbtnselector.btn.btn-add{ :href => new_flow_person_path, :'data-toggle' => 'modal-ajax-listnewform', :'data-selector-target' => '.source, .target' , :'data-modal-class' => 'modal-wide'}
+            %i.grcicon-add
+      .span5
+        %input.widgetsearch.input-block-level{:type => "text", :placeholder => "Search Person"}
+
+    .filter-block
+      .row-fluid
+        .span12
+          -#.modal-search.clearfix
+            .btn-group.closed
+              -#%a#filterButton.btn.dropdown-toggle{"data-toggle" => "dropdown"}
+                GRC Directory
+                %span.caret
+              -#%ul.dropdown-menu
+                %li
+                  %a#showCompanyDirectory{:href => "#", :'data-toggle' => ''}
+                    Company Directory
+                %li
+                  %a#showGRCDirectory{:href => "#", :'data-toggle' => ''}
+                    GRC Directory
+
+          -#.additional-filters.filter-group
+            .row-fluid
+              .span4
+                %label Name
+                %input.span12{:type=>"text", :placeholder => "enter name"}
+              .span4
+                %label Org. group
+                %input.span12{:type=>"text", :placeholder => "example: IT"}
+              .span4
+                %label Title
+                %input.span12{:type=>"text", :placeholder => "example: Compliance"}
+
+          .tabbable.tabs-left
+            .tab-content
+              #category1.tab-pane.active
+                .people-list
+                  %ul.source{ :'data-list-data-href' => flow_people_path(:format => :json), :'data-template-id' => 'person_option' }
+  .span7
+    %h3 Roles for this #{object.class.name.titleize.downcase}
+    .people-list.currentlist
+      %ul.target{ :'data-list-data-href' => flow_object_people_path(:object_type => object.class.name, :object_id => object.id), :'data-template-id' => 'object_person_selected' }

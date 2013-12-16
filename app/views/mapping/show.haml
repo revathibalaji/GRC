@@ -1,0 +1,45 @@
+-@title = "GRC Control Mapper for: #{@program.title}"
+
+-content_for :header do
+  %ul.breadcrumbs
+    %li=link_to 'dashboard', programs_dash_path
+    %li=link_to @program.title, flow_program_path(@program)
+    %li
+      Control Mapper
+
+  %h1
+    %span
+      Control Mapping:
+    =@program.title
+
+-content_for :page_help, 'mapping'
+
+.container-fluid.reg-mapper
+  #mapping_columns.row-fluid{ :'data-resize' => "true" }
+    .span4
+      #section_list
+        =render :partial => 'section_list',
+                :layout => 'layouts/widget_box'
+
+      =render :partial => 'selected_section',
+              :layout => 'layouts/widget_box'
+    .span4
+      #rcontrol_list
+        =render :partial => 'control_list',
+                :layout => 'layouts/widget_box',
+                :locals => { :title_prefix => 'Reg', :program => @program, :control_type => 'regulation' }
+
+      =render :partial => 'selected_control',
+              :layout => 'layouts/widget_box',
+              :locals => { :control_type => 'rcontrol', :map_button_id => :cmap }
+
+    .span4
+      #ccontrol_list
+        =render :partial => 'control_list',
+                :layout => 'layouts/widget_box',
+                :locals => { :title_prefix => 'Company', :program => @program, :control_type => 'company' }
+
+      =render :partial => 'selected_control',
+              :layout => 'layouts/widget_box',
+              :locals => { :control_type => 'ccontrol', :map_button_id => nil }
+

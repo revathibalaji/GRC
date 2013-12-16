@@ -1,0 +1,21 @@
+-# locals: control, risks
+
+%h3.tab-title
+  Risks mitigated by this Control
+  %a.btn.btn-mini.pull-right{ :href => list_edit_flow_control_risks_path(:control_id => control.id), :'data-toggle' => 'modal-ajax-relationship-selector', :'data-modal-reset' => 'reset', :'data-list-target' => 'refresh', :'data-placement'=>"left", :rel => 'tooltip', :title => 'Link risks to this control', :'data-modal-class' => 'modal-wide' }
+    %i.grcicon-link
+
+%ul.tree-structure
+  -risks.each_with_index do |risk, i|
+    -id_prefix = "risk-#{i}"
+    -summary_toggle_target = "#{id_prefix}-summary"
+
+    %li{ :class => risk.class.name.downcase}
+      .item-main
+        .openclose{ :class => 'lastchild' }
+        .item-title
+          .row-fluid
+            =render :partial => 'object_leaf', :locals => { :instance => risk }
+          .item-actions
+            %a.btn.btn-mini.halfopacity{ "rel" => "tooltip", "data-placement" => "left", "title" => "Go to this object's page", :href => flow_risk_path(risk.id) }
+              %i.grcicon-arrowright-black

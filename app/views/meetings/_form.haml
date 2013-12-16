@@ -1,0 +1,73 @@
+-content_for :modal_title do
+  -if f.object.new_record?
+    Create a calendar event
+  -else
+    Edit calendar event
+
+-if !f.object.new_record?
+  -content_for :modal_delete_path, delete_flow_meeting_path(f.object)
+
+.row-fluid
+  .span6
+    %h4
+      Link a calendar event to this Response
+    %ol
+      %li
+        Select your start and end times
+      %li
+        Create your calendar event and click SAVE
+      %li
+        Reopen your calendar event
+      %li
+        Click on 'Publish Event' at bottom of page
+      %li
+        Copy embedded URL ('href' attribute)
+      %li
+        Return to gGRC and paste in link below
+
+    %form
+      %label Date
+      .row-fluid
+        .span4
+          %input.span12{ :type => "text", :name => "fromdate", :value => DateTime.now.strftime("%m/%d/%Y") }
+      .row-fluid
+        .span4
+          %label From
+        .span4
+          %label To
+      .row-fluid
+        .span4
+          %select.span12{ :name => "fromtime" }
+            =(0..86399).step(1800) do |x|
+              %option{ :value => Time.at(x).utc.strftime("%H%M%S"), :selected => Time.now.beginning_of_hour.+(3600) == Time.now.beginning_of_day.+(x) } #{ Time.at(x).utc.strftime("%I:%M %p")}
+            end
+        .span4
+          %select.span12{ :name => "totime" }
+            =(0..86399).step(1800) do |x|
+              %option{ :value => Time.at(x).utc.strftime("%H%M%S"), :selected => Time.now.beginning_of_hour.+(7200) == Time.now.beginning_of_day.+(x) } #{ Time.at(x).utc.strftime("%I:%M %p")}
+            end
+    :javascript
+      $("input[name=fromdate]").datepicker();
+    %br
+
+    - users = f.object.response.people.map do |user| "&add=" + user.email end.join ''
+    %a.btn.btn-success.create-gcal-event{ :target => "_blank", 
+     :href => "http://www.google.com/calendar/event?" + { :action => "TEMPLATE" ,
+     :text=> f.object.response.system.nil? ? "hold - audit response" : ["hold - audit response using ",
+              f.object.response.system.default_slug_prefix.titlecase,
+              ': ',
+              f.object.response.system.title].join(''), 
+      :dates => Time.now.beginning_of_hour.+(3600).utc.strftime("%Y%m%dT%H%M%SZ") + "/" + Time.now.beginning_of_hour.+(7200).utc.strftime("%Y%m%dT%H%M%SZ"),
+      :details=> f.object.response.system.nil? ? "" : f.object.response.system.description, 
+      :trp => "false", 
+      :sprop=> "website:" + request.url, 
+      "sprop" => "name:" + request.domain }.to_query() + users } Create calendar event
+    %br
+    %br
+
+    =f.hidden_field :response_id
+    =wrapped_text_field f, :well, :calendar_url, :placeholder => 'URL for calendar event', :label_name => 'Paste in link here'
+  .span6
+    %img{ :src => image_path('calendar_link_example.jpg')}
+
+%br

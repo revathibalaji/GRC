@@ -1,0 +1,15 @@
+-content_for :widget_title do
+  References
+  %span=system.object_documents.count
+  , People
+  %span=system.object_people.count
+-content_for :widget_help, 'system_more_info'
+
+-content_for :widget_id, 'system_more_info_widget'
+
+%ul.tree-structure.simple
+  =render :partial => 'documents/object_list',
+          :locals  => { :object => system }
+          
+  =render :partial => 'people/object_list',
+          :locals  => { :object => system }

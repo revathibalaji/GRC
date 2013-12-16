@@ -1,0 +1,20 @@
+-content_for :widget_title do
+  Categories
+  %span=control.categories.count
+  , References
+  %span=control.object_documents.count
+  , People
+  %span=control.object_people.count
+-content_for :widget_help, 'control_more_info'
+
+-content_for :widget_id, "control_more_info_widget"
+
+%ul.tree-structure.simple
+  =render :partial => 'categories/object_list',
+          :locals  => { :object => control, :scope_id => Control::CATEGORY_TYPE_ID }
+          
+  =render :partial => 'documents/object_list',
+          :locals  => { :object => control }
+          
+  =render :partial => 'people/object_list',
+          :locals  => { :object => control }

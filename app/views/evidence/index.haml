@@ -1,0 +1,26 @@
+:javascript
+  $(document).ready(function(){
+    $('div.dashboard')
+    .bind("ajax:success", function(evt, data, status, xhr){
+      el = $(evt.target).parents("div.remote")[0];
+      $(el).replaceWith(xhr.responseText);
+    })
+  });
+
+%h1 Evidence Gathering
+.dashboard
+  -@systems.each do |system|
+    -scs = system.system_controls.slugfilter(session[:slugfilter])
+    -next if scs.empty?
+    .system<
+      %div{:class => :systemhead, :title => system.slug}=system.title
+      .tree-structure
+        -scs.each do |sc|
+          =render :partial => 'closed_control', :locals => {:sc => sc}
+      .docs.collapsible
+        %h4.head Documents (#{system.documents.count})
+        -system.documents.each do |document|
+          %div.body
+            %a{:target => '_blank', :href => transform_document_url(document.link)}=document.title
+
+-render_for :sidebar, :partial => "base/sidebar"

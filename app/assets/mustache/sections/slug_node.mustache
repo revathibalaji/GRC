@@ -1,0 +1,35 @@
+<div class="row-fluid">
+  <a href="javascript://">
+    {{{withclass 'selected:selected span10 slot regulationslot toggle selector collapsed oneline'}}}
+    <i class="grcicon-ok slct"></i>
+    <span class="title">{{firstnonempty title description_inline}}</span>
+    <span class="code">{{slug}}</span>
+  </a>
+
+  {{#pack list=linked_controls na=na}}
+  <a data-placement="right" {{#linked_controls.length}}data-popover-trigger="sticky-hover" data-original-title="Mapped Controls" data-content="{{render '/assets/controls/list_popover.mustache'}}"{{/linked_controls.length}}>
+    {{{withattr 'href' '/mapping_section/dialog/\{\{id\}\}'}}}
+    {{{withclass 'attached badge controllistRM status list:badge-warning !list:na:badge-warning !list:!na:badge-important'}}
+    {{#if list.length}}}
+      {{{list.length}}}
+    {{else}}
+        {{#if na}}
+          N/A
+        {{else}}
+          0
+        {{/if}}
+    {{/if}}
+  </a>
+  {{/pack}}
+</div>
+{{#if children}}
+  <div class="item-content in">
+    <ul class="tree-structure" id="children_{{slug}}">
+      {{#children}}
+        <li id="content_{{slug}}" {{data 'model'}} data-model="true">
+          {{> /assets/sections/slug_node.mustache}}
+        </li>
+      {{/children}}
+    </ul>
+  </div>
+{{/if}}

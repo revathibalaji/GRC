@@ -1,0 +1,25 @@
+-# Requires category, children, controls
+
+-subcategory_content_id = "content_#{rand(36**8).to_s(36)}"
+
+%li.category
+  %h3=category ? category.name : 'Uncategorized Controls'
+  %section.content
+    -if controls && controls.size > 0
+      %ul.tree-structure{ :id => subcategory_content_id, :'data-id' => category ? category.id : "0", :'data-object-type' => "category" }
+        -controls.each do |control|
+          -control_content_id = "content_#{rand(36**8).to_s(36)}"
+          %li
+            .item-main
+              .openclose{ :class => 'lastchild' }
+              .item-title
+                .row-fluid
+                  =render :partial => 'object_leaf', :locals => { :instance => control }
+                .item-actions
+                  %a.btn.btn-mini.pull-right{ :href => flow_control_path(control), :title => 'View Control' }
+                    %i.grcicon-goto
+    -if children && children.size > 0
+      %ul.tree-structure
+        -children.each do |subcategory, subchildren, subcontrols|
+          =render :partial => 'category_controls_branch',
+                  :locals => { :category => subcategory, :children => subchildren, :controls => subcontrols }

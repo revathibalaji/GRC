@@ -1,0 +1,16 @@
+%li
+  %a{ :href => self.send("flow_#{controller_name.singularize}_path", item) }
+    .item-main
+      .item-title
+        .row-fluid
+          .span12
+            .oneline
+              %span.title
+                #{item.title}
+              %span.code
+                #{item.slug}
+        -#.item-actions
+          %a.btn.btn-mini{ :href => self.send("flow_#{controller_name.singularize}_path", item) }
+            %i.grcicon-goto
+          %a.btn.btn-mini
+            %i.grcicon-link

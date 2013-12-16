@@ -1,0 +1,128 @@
+-# locals: instance, title_attr, description_attr
+
+-include_notes = false if local_assigns[:include_notes].nil?
+-editable_notes = false if local_assigns[:editable_notes].nil?
+
+-code_attr = :slug if local_assigns[:code_attr].nil?
+-title_attr = :title if local_assigns[:title_attr].nil?
+-description_attr = :description if local_assigns[:description_attr].nil?
+-notes_attr = :notes if local_assigns[:notes_attr].nil?
+
+-code = instance.send(code_attr) if local_assigns[:code].nil?
+-title = instance.send(title_attr) if local_assigns[:title].nil?
+-description = instance.send(description_attr) if local_assigns[:description].nil?
+-description_inline = sanitize(description, :tags => []) if local_assigns[:description_inline].nil?
+-notes = instance.send(notes_attr) if local_assigns[:notes].nil? && instance[notes_attr].present?
+
+-description = description.present? ? description.gsub(/^(?:&nbsp;|<br\/?>|\s)+|(?:&nbsp;|<br\/?>|\s)+$/, '') : nil
+-notes = notes.present? ? notes.gsub(/^(?:&nbsp;|<br\/?>|\s)+|(?:&nbsp;|<br\/?>|\s)+$/, '') : nil
+
+-extra_description = nil if local_assigns[:extra_description].nil?
+-span_class = 'span8' if local_assigns[:span_class].nil?
+
+-object_type = nil if local_assigns[:object_type].nil?
+-object_icon = nil if local_assigns[:object_icon].nil?
+
+%div{ :class => span_class }
+  -if title.present? && (description.present? || (include_notes && notes.present?))
+    -# Both title and description
+    .oneline.expand-on-hover
+      -if object_type.present?
+        %i{ :class => "#{object_icon}-color" }
+      -elsif object_icon.present?
+        %i{ :class => object_icon }
+      %span.title
+        =title
+      %span.code
+        =code
+      %span.description-inline
+        =extra_description
+        %i.description-inline
+          =description_inline
+      -if include_notes
+        -if notes.present?
+          %i.grcicon-comment
+    .description
+      -if instance.has_attribute? notes_attr
+        .note
+          -if include_notes
+            -if notes.present?
+              .note-content
+                -if editable_notes
+                  %a.edit-notes{:href => 'javascript://', :rel => "tooltip" , :title => "Edit Abstract"}
+                    %i.grcicon-edit
+                %strong Abstract
+                .rtf
+                  =display_as_html(notes)
+            -else
+              -if editable_notes
+                %a.note-trigger{:href => 'javascript://'}
+                  + Add Abstract
+      =display_as_html(description)
+
+  -elsif title.present?
+    -# Title only
+    .oneline.expandable
+      -if object_type.present?
+        %i{ :class => "#{object_icon}-color" }
+      -elsif object_icon.present?
+        %i{ :class => object_icon }
+      %span.title
+        =title
+      %span.code
+        =code
+      %span.description-inline
+        =extra_description
+    .description.inhover.no-description
+      -if include_notes && editable_notes
+        .note
+          %a.note-trigger{:href => 'javascript://'}
+            + Add Abstract
+      %i No description
+
+  -elsif (description.present? || (include_notes && notes.present?))
+    -# Description only
+    .oneline.expand-on-hover
+      -if object_type.present?
+        %i{ :class => "#{object_icon}-color" }
+      -elsif object_icon.present?
+        %i{ :class => object_icon }
+      -if extra_description.present?
+        %span.title
+          =extra_description
+      %span.code
+        =code
+      %span.description-inline
+        %i.description-inline=description_inline
+      -if include_notes
+        -if notes.present?
+          %i.grcicon-comment
+    .description.inhover
+      =display_as_html(description)
+      -if include_notes
+        -if instance.has_attribute? notes_attr
+          .note
+            -if notes.present?
+              .note-content
+                -if editable_notes
+                  %a.edit-notes{:href => 'javascript://'}
+                    %i.grcicon-edit
+                %strong Abstract
+                .rtf
+                  =display_as_html(notes)
+            -else
+              -if editable_notes
+                %a.note-trigger{:href => 'javascript://'}
+                  + Add Abstract
+
+  -else
+    -# Neither (shouldn't happen)
+    .oneline
+      -if object_type.present?
+        %i{ :class => "#{object_icon}-color" }
+      -elsif object_icon.present?
+        %i{ :class => object_icon }
+      %span.title (No description)
+.span1
+  %a.view-more{:href => 'javascript://'}
+    view

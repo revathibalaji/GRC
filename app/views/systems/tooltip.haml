@@ -1,0 +1,22 @@
+-content_for :tooltip_title do
+  .row-fluid
+    .span12
+      %h3
+        -if system.is_biz_process?
+          %i{:class => "grcicon-businessprocess-color"}
+        -else
+          %i{:class => "grcicon-system-color"}
+        %span.title
+          =system.title
+        %span.code
+          =system.slug
+
+.popover-inner-content
+  .row-fluid
+    .span12
+      %h4 Description
+      -if system.description != ""
+        =display_as_html system.description
+      -else
+        .rtf
+          %p.no-data No description available

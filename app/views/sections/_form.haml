@@ -1,0 +1,60 @@
+-content_for :modal_title do
+  -if f.object.new_record?
+    Create a new #{f.object.directive.section_meta_kind}
+  -else
+    Edit #{f.object.directive.section_meta_kind}
+
+-if !f.object.new_record?
+  -content_for :modal_delete_path, delete_flow_section_path(f.object)
+
+.row-fluid
+  .span2{:class => error_class(f, :directive)}
+    %label{:for => "section-directive_id"} #{f.object.directive.meta_kind.to_s.titleize}
+    %input#section-directive_id{:name => "section[directive_id]", :type => "hidden", :value => f.object.directive_id}
+    =f.object.directive.slug
+    =error_messages_inline(f, :directive)
+
+  .span3{:class => error_class(f, :slug)}
+    %label{:for => "section-code"} Code (autofill)
+    %input#section-code.span12{:placeholder => "#{f.object.default_slug_prefix}-XXXX", :type => "text", :value => f.object.slug, :name => 'section[slug]'}
+    =error_messages_inline(f, :slug)
+
+  -#.span1.disabled{:class => error_class(f, :version)}
+    %label{:for => "section-version"} Version
+    %input#section-version.input-supermini{:placeholder => "SOX", :type => "text", :value => nil, :name => 'section[version]', :disabled => 'disabled'}
+    =error_messages_inline(f, :version)
+
+  -#.span7.disabled{:class => error_class(f, :status)}
+    %label{:for => "section-status"} Status
+    %select#section-status.input-small{ :name => 'section[status]', :value => nil, :disabled => 'disabled' }
+      %option Deprecated
+      %option Open
+    =error_messages_inline(f, :status)
+
+.row-fluid
+  .span12{:class => error_class(f, :title)}
+    %label{:for => "section-title"} Title
+    %input#section-title.span12{:placeholder => "Title", :type => "text", :value => f.object[:title], :name => 'section[title]'}
+    =error_messages_inline(f, :title)
+
+.row-fluid
+  %label{:for => "section-description"} Text of #{f.object.directive.section_meta_kind.to_s.titleize}:
+.row-fluid{"control-group" => ""}
+  .span12.wysiwyg-area{:class => error_class(f, :description)}
+    %textarea#section-description.span12.double.wysihtml5{:placeholder => "", :rows => "4", :name => 'section[description]'}=f.object.description
+    =error_messages_inline(f, :description)
+
+.row-fluid
+  .span12{:class => error_class(f, :url)}
+    %label{:for => "section-url"} URL for this #{f.object.directive.section_meta_kind} (optional)
+    %input#section-link.span12{:placeholder => "http://", :type => "text", :value => f.object.url, :name => 'section[url]'}
+    =error_messages_inline(f, :url)
+
+.row-fluid
+  %label{:for => "section-notes"} Abstract
+.row-fluid{"control-group" => ""}
+  .span12.wysiwyg-area{:class => error_class(f, :notes)}
+    %textarea#section-notes.span12.double.wysihtml5{:placeholder => "", :rows => "4", :name => 'section[notes]'}=f.object.notes
+    =error_messages_inline(f, :notes)
+
+=render :partial => "shared/wysihtml5"

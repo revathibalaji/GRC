@@ -1,0 +1,32 @@
+=form_for section, :url => mapping_update_path(section), :remote => true, :class => 'form-inline' do |f|
+  .modal-header
+    .pull-right
+      %a.widgetbtn.btn.btn-mini{"data-toggle" => "modal", :href => "#comingsoonModal"}
+        %i.grcicon-help-black
+      %a.widgetbtn.btn.btn-mini{"data-dismiss" => "modal", :href => '#'}
+        %i.grcicon-x-grey
+    %h2 Controls Mapped to #{@section.slug}
+
+  .modal-body
+    .row-fluid
+      .span12.well
+        =f.check_box :na, :class => :checkbox
+        %h3.no-control
+          &nbsp;No controls implemented for this section
+          
+    .row-fluid
+      .span12
+        =f.label :notes, "Note", :class => :cleanlabel
+        .wysiwyg-area
+          =f.text_area :notes, :class => [:wysihtml5, :span12, :note], :rows => 3
+
+  .modal-footer
+    .row-fluid
+      .span6
+        .deny-buttons
+          %a.btn{:'data-dismiss' => 'modal-reset', :href => '#' } Cancel
+      .span6
+        .confirm-buttons
+          %a.btn.btn-primary{:'data-toggle' => 'modal-submit', :href => '#' } Save
+
+=render :partial => "shared/wysihtml5"

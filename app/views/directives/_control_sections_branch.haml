@@ -1,0 +1,34 @@
+-expanded = local_assigns.has_key?(:expanded) && expanded
+
+=walk_slug_tree(Directive.slugtree(controls), :li_class => 'control') do |item, step|
+  .item-main
+    .openclose{ :class => 'lastchild' }
+    .item-title
+      .row-fluid
+        =render :partial => 'object_leaf', :locals => { :instance => item }
+      .item-actions
+  .item-content.in
+    =walk_slug_tree(Directive.slugtree(item.implemented_controls), :li_class => 'control') do |item, step|
+      .openclose{ :class => 'lastchild' }
+      .item-title
+        .row-fluid
+          =render :partial => 'object_leaf', :locals => { :instance => item }
+          .span2
+            -controls = item.linked_controls
+            -status_class = (controls.empty? && !item.na?) ? 'statusred' : 'statusyellow'
+            %a.controllist.attached{ :class => status_class, :href => mapping_section_dialog_path(item) }
+
+              -controls = item.linked_controls
+              -if !controls.empty?
+                %ul{ :title => controls.map(&:slug).join(", ") }
+                  %li
+                    %strong #{controls.size}:
+                  -controls.each do |control|
+                    %li=control.slug
+              -elsif item.na?
+                %strong N/A
+              -else
+                %strong 0
+        .item-actions
+          %a.btn.btn-mini.fltrt{ :href => edit_flow_section_path(item), :'data-toggle' => 'modal-ajax-form', :'data-modal-reset' => 'reset', :'data-dirty' => "#regulations, #combo", :title => 'Edit #{item.meta_kind.to_s.titleize}' }
+            %i.grcicon-edit

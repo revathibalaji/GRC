@@ -1,0 +1,65 @@
+-content_for :header do
+  %ul.breadcrumbs
+    &nbsp;
+  %h1
+    Admin Dashboard
+
+-content_for :page_help, 'admin'
+
+-content_for :subheader_extras do
+  %ul.actions.pull-right
+    -if has_feature? :BETA
+      %li
+        %a{:href => "/design/styleguide"}
+          %i.grcicon-project-black
+          Styleguide
+    %li.btn-group
+      %a.dropdown-toggle{:href => '#', :'data-toggle' => 'dropdown'}
+        %i.grcicon-imp-exp
+        %span Import/Export
+        %span.caret
+      %ul.dropdown-menu
+        %li.title
+          Systems
+        %li
+          %a{:href => "/systems/import"}
+            %i.grcicon-system-color
+            %span Import Systems
+        %li
+          %a{"data-toggle" => "modal-ajax", :href => "/systems/export.html"}
+            %i.grcicon-system-color
+            %span Export Systems
+        %li.divider
+        %li.title
+          Processes
+        %li
+          %a{:href => "/systems/import?is_biz_process=1"}
+            %i.grcicon-process-color
+            %span Import Processes
+        %li
+          %a{"data-toggle" => "modal-ajax", :href => "/systems/export.html?is_biz_process=1"}
+            %i.grcicon-process-color
+            %span Export Processes
+        %li.divider
+        %li.title
+          Risks
+        %li
+          %a{:href => "/risks/import"}
+            %i.grcicon-risk-color
+            %span Import Risks
+        %li
+          %a{"data-toggle" => "modal-ajax", :href => "/risks/export.html"}
+            %i.grcicon-risk-color
+            %span Export Risks
+
+.container-fluid
+  #columns.row-fluid{ :'data-resize' => "true" }
+    #left-column.span6.widget-area
+      =render :partial => 'admin_dash/categories',
+                :layout => 'layouts/widget_box',
+                :locals => { :categories => @categories, :options => @options, :widget_class => 'widget-tabs widget-tabs-horizontal' }
+
+    #right-column.span6.widget-area
+      =render :partial => 'admin_dash/accounts',
+          :layout => 'layouts/widget_box',
+          :locals => { :accounts => @accounts, :people => @people, :widget_class => 'widget-tabs widget-tabs-horizontal' }

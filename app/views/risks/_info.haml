@@ -1,0 +1,44 @@
+-model_name = controller_name.singularize
+-model_title = model_name.titleize
+-instance = instance_variable_get("@" + model_name)
+
+-content_for :widget_title do
+  #{model_title} Info
+
+-content_for :widget_help, "#{model_name}_info"
+
+-content_for :widget_id, "#{model_name}_info_widget"
+
+%ul.info-list
+  %li.float-element
+    %label
+      Code
+    %span
+      %strong=instance.slug
+  %li.float-element
+    %label
+      Title
+    %span
+      %strong=instance.title
+  %li
+    %label
+      Description
+    -if instance.description != ""
+      =display_as_html instance.description
+    -else
+      .rtf
+        %p.no-data no description available
+  -if instance.url.present?
+    %li.float-element
+      %label
+        Direct Link
+      %span
+        =link_to(instance.url, absolute_url(instance.url), :target => "_blank", :class => "inner-element")
+
+
+
+%section.footer
+  .row-fluid
+    .span6
+      %p.footer-left
+        Created: #{instance.created_at.strftime("%m/%d/%y")}

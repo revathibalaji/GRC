@@ -1,0 +1,45 @@
+-model_name = controller_name.singularize.underscore
+-model_title = model_name.titleize
+-instance = instance_variable_get("@" + model_name)
+
+-@title = "GRC: PBC List"
+
+-content_for :header do
+  %ul.breadcrumbs
+    %li=link_to 'dashboard', programs_dash_path
+    %li=link_to instance.audit_cycle.program.title, flow_program_path(instance.audit_cycle.program_id)
+    %li=link_to instance.audit_cycle.title, flow_cycle_path(instance.audit_cycle)
+    %li= 'PBC list'
+  %h1
+    #{instance.audit_cycle.title} PBC List
+
+-content_for :page_help, 'pbc_list'
+
+-content_for :subheader_extras do
+  %ul.actions.pull-right
+    %li{:class => "items-#{@pbc_list.requests.count}"}
+      %a{ :href => import_flow_pbc_list_path(@pbc_list) }
+        %i.grcicon-imp-exp
+        %span Import Requests
+    -if @pbc_list.requests.count != 0
+      %li
+        %a{ :href => export_flow_pbc_list_path(@pbc_list), :'data-toggle' => 'modal-ajax' }
+          %i.grcicon-export
+          %span Export Requests
+    -else
+      %li
+        %a{ :href => "#{asset_path "pbc-import-template.csv"}"}
+          %i.grcicon-export
+          %span Get Request Template
+    %li{:class => "items-#{@pbc_list.requests.count}"}
+      %a{ :href => export_responses_flow_pbc_list_path(@pbc_list), :'data-toggle' => 'modal-ajax' }
+        %i.grcicon-export
+        %span Export Responses
+
+.container-fluid
+  .row-fluid
+    .span12
+      =render :partial => 'main',
+        :layout => 'layouts/widget_box',
+        :locals => { :pbc_list => instance, :widget_class => 'governance', :widget_id => "pbc_list_widget"}
+

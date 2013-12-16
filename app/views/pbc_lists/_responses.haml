@@ -1,0 +1,34 @@
+-# responses = request.responses
+
+-new_response_id = "request-#{request.id}-response-new"
+-response_list_id = "request-#{request.id}-responses"
+
+%h4.pbc-title.response-title-bar
+  ="Responses (#{request.type_name})"
+  %a.btn.btn-mini.btn-add{"data-toggle" => "modal", :href => "#newResponse"}
+    %i.grcicon-add{ "data-target" => "##{new_response_id}", "data-toggle" => "collapse", "rel" => "tooltip", "data-placement" => "top", "title" => "Add new response" }
+  %span.inline-help
+    &laquo;
+    click here to add a response
+%ul.tree-structure.add-response.items-list.collapse{ :id => new_response_id }
+  %li.item
+    .item-main
+      .response-add
+        .row-fluid
+          .span3.pbc-add-response.next-each-other
+            %input.pbc-system-search{:type => "text", :placeholder => "Type to search systems/processes"}
+            %a#tooltip11.btn.btn-add.btn-mini.pull-left{ :href => new_flow_system_path, :'data-toggle' => 'modal-ajax-form', :'data-modal-reset' => 'reset', :'data-modal-class' => 'modal-wide', "rel" => "tooltip", "data-placement" => "top", "title" => "Add new response" }
+              %i.grcicon-add
+          .span1
+    
+          .span3
+            -#%span.pbc-counter.empty
+              %i.grcicon-person
+              0
+          .span3
+            -#%span.pbc-counter.empty
+              %i{ :class => request_type_icon(request.type_name) }
+              0
+          .span1
+            &nbsp;
+%ul.tree-structure.items-list.pbc-responses{ :id => response_list_id }

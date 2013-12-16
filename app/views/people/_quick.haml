@@ -1,0 +1,20 @@
+-quick_result ||= nil
+-if @people.empty?
+  .no-results
+    No results found
+-else
+  %ul.tree-structure.simple.one-line-structure
+    -@people.sort_by{|person|person.last_name || 'z'}.each do |person|
+      -if quick_result
+        =render 'base_objects/quick_result', { :item => person }
+      -else
+        %li
+          .item-title
+            .row-fluid
+              .span10
+                .title
+                  =link_to '#' do #flow_person_path(person), 'data-popover-href' => tooltip_flow_person_path(person)
+                    =person.name.presence || person.email.presence || "&nbsp;".html_safe
+            .item-actions
+              %a.widgetbtn.btn.btn-mini{ :'data-form-target' => "refresh", :'data-delete-target' => "refresh", :'data-modal-reset' => "reset", :'data-toggle' => "modal-ajax-form", :href => edit_flow_person_path(person) }
+                %i.grcicon-edit

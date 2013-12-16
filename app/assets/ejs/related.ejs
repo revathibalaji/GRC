@@ -1,0 +1,107 @@
+<%#
+  Overall structure:
+
+  Relationship 1 (forward)
+    Relationship 1 (foward) type information
+    Relationship 1 (forward) objects
+  Relationship 1 (backward)
+    Relationship 1 (backward) type information
+    Relationship 1 (backward) objects
+
+  Example data:
+    [
+      {
+        "relationship_type" : {
+          "id" : "product_within_scope_of_program",
+          "title": "Products in scope of this program",
+          "description" : "Products that are within the scope of a program. This means that they need to pay attention to the program's appropriate sections and controls.",
+          "edit_url" : "relationships/foo?bar"
+        },
+        "related_objects" : [
+          {
+            "url" : "products/1",
+            "object": {
+              "type": "product",
+              "id": 1,
+              "slug" : "FOO1",
+              "title" : "A product"
+              }
+          },
+          {
+            "url" : "products/2",
+            "object": {
+              "type": "product",
+              "id": 1,
+              "slug" : "FOO1",
+              "title" : "A product"
+              }
+          }
+        ]
+      }
+    ]
+%>
+
+<%
+if (this.length) {
+  // Each relationship type
+  this.forEach(function(rel_data) {
+    // Add descriptive header
+    var rel_info = rel_data.relationship_type
+%>
+  <div class="itemswell">
+    <h4 class="nominheight">
+      <%= rel_info.title %>
+      <a class="widgetbtn pull-right" href="<%=rel_info.edit_url%>" data-toggle="modal-ajax-relationship-selector" data-modal-reset="reset" data-tab-target="#related-objects-<%=rel_info.id%>" data-modal-class="modal-wide"><i class="grcicon-link"></i></a>
+    </h4>
+    <div class="row-fluid">
+      <div class="span12 captionbox">
+        <div class= "subtitle">
+          <%= rel_info.description %>
+        </div>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <ul class="span12" id="related-objects-<%= rel_info.id %>">
+<%
+    // Iterate through all objects
+    var related_objects = rel_data.related_objects
+    if (related_objects.length) {
+      // Iterate through results
+      related_objects.forEach(function (object_info) {
+        // Set up the row, populate it with information.
+        var object = object_info.object
+%>
+        <li class="controlSlot">
+          <a href="/<%= object_info.url %>" data-popover-href="/<%= object_info.url %>/tooltip" data-popover-trigger="sticky-hover">
+            <div class="row-fluid nominheight">
+              <div class="span4 nominheight oneline">
+                <span class="controls-subgroup">
+                  <strong><%= object.slug %></strong>
+                </span>
+              </div>
+              <div class="span8 nominheight">
+                <span class="controls-subgroup">
+                  <%= object.title %>
+                </span>
+              </div>
+            </div>
+          </a>
+        </li>
+<%
+      })
+    } else {
+      // Do something useful with no results
+%>
+    <div class="row-fluid">
+      <div class="controlSlot">No results</div>
+    </div>
+<%
+    }
+%>
+      </ul>
+    </div>
+  </div>
+<%
+  })
+}
+%>

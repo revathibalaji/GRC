@@ -1,0 +1,15 @@
+-content_for :header do
+  %ul.breadcrumbs
+    %li=link_to "dashboard", programs_dash_path
+  %h1
+    Controls
+
+.box
+  .head
+    %h1 Controls
+  .body
+    %ul
+      -@controls.each do |control|
+        %li.item
+          =link_to control.slug, flow_control_path(control)
+          

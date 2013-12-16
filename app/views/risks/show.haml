@@ -1,0 +1,54 @@
+-model_name = controller_name.singularize.underscore
+-model_title = model_name.titleize
+-instance = instance_variable_get("@" + model_name)
+
+-@title = "GRC #{model_title}: #{instance.title}"
+
+-content_for :header do
+  %ul.breadcrumbs
+    %li=link_to 'dashboard', programs_dash_path
+    %li=instance.slug
+
+  %h1.risk
+    .grcobject.risk{:rel => "tooltip", :'data-placement'=>"bottom", :title => model_title}
+      %i.grcicon-risk
+    =instance.title
+
+-content_for :page_help, model_name
+
+-content_for :subheader_extras do
+  %ul.actions.pull-right
+    %li
+      %a{ :href => method("edit_flow_#{model_name}_path").call(instance), :'data-toggle' => 'modal-ajax-form', :'data-modal-reset' => 'reset', :'data-form-target' => 'refresh', :'data-modal-class' => 'modal-wide', :title => "Edit #{model_title}" }
+        %i.grcicon-edit
+        %span Edit #{model_title}
+
+-content_for :subheader_plus do
+  %a.navbarplus.fltrt{ :href => method("new_flow_#{model_name}_path").call(), :'data-toggle' => 'modal-ajax-form', :'data-modal-reset' => 'reset', :'data-form-target' => 'redirect', :'data-modal-class' => 'modal-wide'}
+
+.container-fluid
+  #risks_columns.row-fluid{ :'data-resize' => "true" }
+    #middle_column.span8.widget-area
+      =render :partial => "main",
+              :layout => 'layouts/widget_box',
+              :locals => { model_name.to_sym => instance, :widget_class => "risk" }
+
+      =render :partial => "extras",
+              :layout => 'layouts/widget_box',
+              :locals => { model_name.to_sym => instance, :widget_class => "widget-tabs widget-tabs-horizontal risk" }
+      =render :partial => 'shared/related',
+              :layout => 'layouts/widget_box',
+              :locals => { :instance => instance, :widget_class => 'widget-tabs widget-tabs-horizontal risk' }
+
+    #right_column.span4.widget-area
+      =render :partial => "info",
+              :layout => 'layouts/widget_box',
+              :locals => { model_name.to_sym => instance, :widget_class => "risk" }
+
+      =render :partial => "more_info",
+              :layout => 'layouts/widget_box',
+              :locals => { model_name.to_sym => instance, :widget_class => 'related business' }
+
+      =render :partial => "risky_attributes",
+              :layout => 'layouts/widget_box',
+              :locals => { model_name.to_sym => instance, :widget_class => "risk" }

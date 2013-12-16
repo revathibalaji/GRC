@@ -1,0 +1,16 @@
+-content_for :modal_title do
+  -if f.object.new_record?
+    Create a new PBC list
+  -else
+    Edit PBC list
+
+-if !f.object.new_record?
+  -content_for :modal_delete_path, delete_flow_pbc_list_path(f.object)
+
+.row-fluid
+  .span3
+    %label Audit Cycle
+    .item=f.object.audit_cycle.program.title
+    =f.hidden_field :audit_cycle_id
+
+%br

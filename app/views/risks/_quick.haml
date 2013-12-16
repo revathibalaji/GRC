@@ -1,0 +1,19 @@
+-quick_result ||= nil
+-if @risks.empty?
+  .no-result.object-no-result
+    No results found
+-else
+  %ul.tree-structure.simple.single-row-tabs
+    -@risks.each do |risk|
+      -if quick_result
+        =render 'base_objects/quick_result', { :item => risk }
+      -else
+        %li.risk
+          %a{ :href => flow_risk_path(risk), :'data-popover-href' => tooltip_flow_risk_path(risk), :'data-popover-trigger' => 'sticky-hover' }
+            .row-fluid
+              .span12
+                .item-identifier
+                  %span.title
+                    =risk.title
+                  %span.code
+                    =risk.slug

@@ -1,0 +1,28 @@
+-# locals: risk
+
+-model_name = controller_name.singularize
+-model_title = controller_name.singularize.titleize
+-instance = instance_variable_get("@" + model_name)
+-content_for :widget_title do
+  Controls and Business Objects linked to this Risk
+
+-content_for :widget_help, "#{model_name}_business_objects"
+
+-content_for :widget_id, "#{model_name}_business_objects_widget"
+
+.tabbable
+  %ul.nav.nav-tabs
+    %li.text-compliance=link_to '<i class="grcicon-control-color"></i>Controls'.html_safe, '#controls', :data => { :toggle => 'tab' }#, :'tab-href' => risks_flow_control_path(control) }
+    %li.text-business=link_to 'Business Objects', '#business_objects', :data => { :toggle => 'tab' } #, :'tab-href' => systems_flow_control_path(control) }
+  
+  .action-items
+    %a.expandAll.btn.btn-mini{:href => "#", :rel => "tooltip", :title => "Expand all"}
+      %i.grcicon-wide-black
+    %a.shrinkAll.btn.btn-mini{:href => "#", :rel => "tooltip", :title => "Collapse all"}
+      %i.grcicon-normal-black
+
+  .tab-content
+    #controls.tab-pane
+      =render :partial => 'controls', :locals => { :instance => instance}
+    #business_objects.tab-pane
+      =render :partial => 'business_objects', :locals => { :instance => instance }

@@ -1,0 +1,23 @@
+-model_name = controller_name.singularize.underscore
+-model_title = model_name.titleize
+-instance = instance_variable_get("@" + model_name)
+
+-content_for :tooltip_title do
+  .row-fluid
+    .span12
+      %h3
+        %i{:class => "grcicon-#{instance.class.name.downcase}-color"}
+        %span.title
+          =instance.title
+        %span.code
+          =instance.slug
+
+.popover-inner-content
+  .row-fluid
+    .span12
+      %h4 Description
+      -if instance.description != ""
+        =display_as_html instance.description
+      -else
+        .rtf
+          %p.no-data No description available

@@ -1,0 +1,16 @@
+-content_for :page_help, 'controls_import'
+
+-content_for :header do
+
+  %ul.breadcrumbs
+    %li=link_to "dashboard", programs_dash_path
+    %li=link_to @directive.title, flow_directive_path(@directive)
+    %li Import
+
+  %h1
+    Import Controls
+
+.container-fluid
+  .row-fluid
+    =render :partial => 'import_controls',
+            :layout => 'layouts/widget_box'

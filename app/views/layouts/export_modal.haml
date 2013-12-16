@@ -1,0 +1,35 @@
+.modal-header
+  -help_path = yield_content!(:modal_help)
+  .pull-right
+    -if !help_path.blank?
+      %a.widgetbtn{ :href => "/help/#{help_path}", :'data-toggle' => 'modal-ajax', :title => "Help - What is this?"}
+        %i.grcicon-help-black
+    %a.widgetbtn.btn.btn-mini{ :'data-dismiss' => 'modal', :href => '#'}
+      %i.grcicon-x-grey
+
+  =yield_content!(:modal_title) || "&nbsp;".html_safe
+
+.modal-body.cleanlabels.compact-rows
+  =yield
+  -detail = yield_content!(:export_detail)
+  -if detail.present?
+    =detail
+  -else
+    -# Default export details
+    %p
+      This process exports a CSV file.  If you are opening the CSV file in Libre rather than gSheets, your settings in Libre should be:
+      %dl
+        %dt Separated by
+        %dd Comma
+        %dt Text Delimiter
+        %dd " (double quotation mark).
+
+.modal-footer
+  .row-fluid
+    .span3
+      .deny-buttons
+    .span6
+    .span3
+      .confirm-buttons
+        %a.btn.btn-primary{ :href => yield_content!(:export_url), :target => '_blank' } Export
+        %a.btn.btn-primary{ :'data-dismiss' => 'modal', :href => '#' } Done

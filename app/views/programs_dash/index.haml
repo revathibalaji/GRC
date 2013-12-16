@@ -1,0 +1,74 @@
+-@title = "Dashboard"
+ 
+-content_for :page_help, 'dashboard'
+
+-content_for :header do
+  %ul.breadcrumbs
+  %link{:href => "css/jquery.themes.css", :rel => "stylesheet", :type => "text/css"}
+  %script{:src => "js/jquery.themes.js", :type => "text/javascript"}
+  %link{:href => "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/overcast/jquery-ui.css", :rel => "stylesheet"}
+  %script{:src => "http://code.jquery.com/jquery-1.9.1.js"}
+  %script{:src => "http://code.jquery.com/ui/1.10.3/jquery-ui.js"}
+     
+:javascript
+  $(function() {
+  $( "#tabs" ).tabs();
+  });
+ 
+%body
+  #tabs
+    %ul
+      %li
+        %a{:href => "#tabs-1"} Dashboard
+      %li
+        %a{:href => "#tabs-2"} Governance / Compliance Management
+      %li
+        %a{:href => "#tabs-3"} Asset Management
+      %li
+        %a{:href => "#tabs-4"} Program Management
+      %li
+        %a{:href => "#tabs-5"} Risk Management      
+      / %li
+      /   %a{:href => "#tabs-6"} Add Widget
+    #tabs-1
+      %p
+        = pie_chart Directive.group("kind").count
+        = pie_chart Program.group("kind").count 
+      / =render :partial => 'governance',
+      /         :layout => 'layouts/widget_box',
+      /         :locals => { :programs => @programs, :widget_class => "governance widget-tabs" }
+
+    #tabs-2
+      %p
+      =render :partial => 'governance',
+              :layout => 'layouts/widget_box',
+              :locals => { :programs => @programs, :widget_class => "governance widget-tabs" }         
+    #tabs-3
+      %p
+      =render :partial => 'business_objects',
+              :layout => 'layouts/widget_box',
+              :locals => { :widget_class => "business widget-tabs" }    
+    #tabs-4
+      %p
+      =render :partial => 'programs',
+              :layout => 'layouts/widget_box',
+              :locals => { :widget_class => "programs widget-tabs" }
+    #tabs-5
+      %p     
+      =render :partial => 'risk',
+                :layout => 'layouts/widget_box',
+                :locals => { :programs => @programs, :widget_class => "risk widget-tabs" }     
+   
+    / #tabs-6
+    /   %p
+    /   =render :partial => 'shared/add_widget_section'
+
+
+
+
+
+
+
+
+
+

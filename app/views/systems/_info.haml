@@ -1,0 +1,59 @@
+-content_for :widget_title do
+  -if system.is_biz_process?
+    Process
+  -else 
+    System
+  Info
+
+-content_for :widget_help, 'system_info'
+
+-content_for :widget_id, 'system_info_widget'
+
+%ul.info-list
+  %li.float-element
+    %label
+      Code
+    %span
+      %strong=system.slug
+  %li.float-element
+    %label
+      Title
+    %span
+      %strong=system.title
+  %li.float-element
+    %label
+      Type
+    %span
+      -if system.is_biz_process?
+        %i.grcicon-process-color
+        Process
+      -else
+        %i.grcicon-system-color
+        System
+  -if system.network_zone
+    %li.float-element
+      %label
+        Network Zone
+      %span
+        =system.network_zone && system.network_zone.title
+  -if system.url.present?
+    %li.float-element
+      %label
+        Direct Link
+      %span
+        =link_to(system.url, absolute_url(system.url), :target => "_blank", :class => "inner-element")
+  %li
+    %label
+      Description
+    -if system.description != ""
+      =display_as_html system.description
+    -else
+      .rtf
+        %p.no-data no description available
+
+%section.footer
+  .row-fluid
+    .span6
+      %p.footer-left
+        Created: #{system.created_at.strftime("%m/%d/%y")}
+

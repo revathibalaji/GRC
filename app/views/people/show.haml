@@ -1,0 +1,39 @@
+-model_name = controller_name.singularize
+-model_title = model_name.titleize
+-model = model_name.camelcase.constantize
+-instance = instance_variable_get("@" + model_name)
+-relationships = model.valid_relationships
+
+-@title = "GRC #{model_title}: #{instance.email}"
+
+-content_for :header do
+  %ul.breadcrumbs
+    %li=link_to 'dashboard', programs_dash_path
+    %li= instance.email
+    
+  %h1
+    =instance.email
+
+-content_for :page_help, model_name
+
+-content_for :subheader_extras do
+  %h1.fltrt.highlighted #{model_title}
+
+-content_for :subheader_plus do
+  %a.navbarplus.fltrt{ :href => method("new_flow_#{model_name}_path").call(), :'data-toggle' => 'modal-ajax-form', :'data-modal-reset' => 'reset', :'data-form-target' => 'redirect', :'data-modal-class' => 'modal-wide'}
+
+.container-fluid
+  .row-fluid
+    .span8
+      -#=render :partial => "shared/graph",
+              :layout => 'layouts/widget_box',
+              :locals => { model_name.to_sym => instance,
+                :instance => instance}
+  
+    .span4
+      =render :partial => 'shared/related',
+              :layout => 'layouts/widget_box',
+              :locals => { model_name.to_sym => instance,
+                :models => model.related_models,
+                :instance => instance}
+  

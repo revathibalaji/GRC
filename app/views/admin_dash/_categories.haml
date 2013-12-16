@@ -1,0 +1,29 @@
+-content_for :widget_title do
+  Categories & Options
+
+-content_for :widget_help, 'admin_categories'
+
+-content_for :widget_id, 'admin_categories_widget'
+
+-content_for :widget_buttons do
+  .filter
+    .row-fluid
+      .span12
+        .pull-right
+          %a.btn.btn-add{:href => new_flow_category_path, :'data-toggle' => 'modal-ajax-form', :'data-modal-reset' => 'reset', :'data-form-target' => 'refresh', :title => 'Create New Category' }
+            %i.grcicon-add
+            Category
+          %a.btn.btn-add{:href => new_flow_option_path, :'data-toggle' => 'modal-ajax-form', :'data-modal-reset' => 'reset', :'data-form-target' => 'refresh', :title => 'Create New Option' }
+            %i.grcicon-add
+            Option
+
+-#-content_for :widget_buttons do
+  %input.ui-corner-all.widgetsearch.clear-value(type='text' placeholder='Search')
+
+.tabbable#quick_find
+  %ul.nav.nav-tabs
+    %li=link_to 'Categories', '#categories', :data => { :'tab-href' => flow_categories_path(:quick => true), :toggle => 'tab' }
+    %li=link_to 'Options', '#options', :data => { :'tab-href' => flow_options_path(:quick => true), :toggle => 'tab' }
+  .tab-content
+    #categories.tab-pane
+    #options.tab-pane

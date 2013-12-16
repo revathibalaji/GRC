@@ -1,0 +1,52 @@
+-widget_title = "Related" if local_assigns[:widget_title].nil?
+
+-#models = related_objects(instance)
+-#left_models, right_models = arranged_related_objects(instance)
+
+-content_for :widget_title do
+  =widget_title
+
+-content_for :widget_id, "related_widget"
+
+-content_for :widget_help, 'related'
+
+-impact_scope = instance.impact_scope_for_directives
+
+#related.open
+  .row-fluid
+    .span12
+      .tabbable
+        %ul.nav.nav-tabs
+          -impact_scope.each do |model, rels|
+            -rels_count = rels.sum { |rel_type_id, rel_objects| rel_objects.size }
+            -table_name = model.underscore.pluralize #.table_name
+            -icon = "grcicon-#{model.downcase}-color"
+            %li.text-business.tab.tab-btn
+              %a{:href => "#related-#{table_name}-pane", "data-toggle" => 'tab' }
+                %i{:class => icon }
+                #{table_name.titleize}
+                %span
+                  #{rels_count}
+        .tab-content
+          -impact_scope.each do |model, rels|
+            -model_name = model.underscore
+            -puts model_name
+            .tab-pane{:id => "related-#{model.underscore.pluralize}-pane"}
+              %ul.tree-structure.simple
+                -rels.each do |rel_type_id, rel_objects|
+                  -if rel_objects.size > 0
+                    -rel_objects.uniq.each do |o|
+                      %li{ :class => model.downcase }
+                        .item-main
+                          %a{:href => self.send("flow_#{model_name}_path", o), :class => "block-element", :'data-popover-href'=> self.send("tooltip_flow_#{model_name}_path", o), :'data-popover-trigger' => "sticky-hover"}
+                            .item-title
+                              .row-fluid
+                                .span8
+                                  .oneline
+                                    %span.title
+                                      =o.title
+                                    %span.code
+                                      =o.slug
+                  -else
+                    %li.no-result
+                      No results

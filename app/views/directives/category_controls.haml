@@ -1,0 +1,12 @@
+-category_roots = Category.roots.all
+
+%ul.tree-structure
+  -@category_tree.each do |category, children, controls|
+    =render :partial => 'category_controls_branch',
+            :locals => { :category => category, :children => children, :controls => controls }
+
+.action-items
+  %a.expandAll.btn.btn-mini{:href => "#", :rel => "tooltip", :title => "Expand all"}
+    %i.grcicon-wide-black
+  %a.shrinkAll.btn.btn-mini{:href => "#", :rel => "tooltip", :title => "Collapse all"}
+    %i.grcicon-normal-black

@@ -1,0 +1,60 @@
+-# locals: risk, id_prefix, seen_ids
+
+-model_underscore = 'risk'
+-instance = risk
+
+-is_root = false if local_assigns[:is_root].nil?
+-is_editable = false if local_assigns[:is_editable].nil?
+
+-seen_ids = [] if local_assigns[:seen_ids].nil?
+-id_prefix = "object-#{instance.id}" if local_assigns[:id_prefix].nil?
+
+-seen_this = seen_ids.include?(instance.id)
+
+-controls = instance.controls
+
+-expand_this = controls.count > 0
+
+-summary_toggle_target = "#{id_prefix}-summary"
+-objects_toggle_target = "#{id_prefix}-objects"
+
+-main_toggle_target = expand_this ? objects_toggle_target : summary_toggle_target
+
+%li.risk
+  .item-main
+    -if !is_root
+      .openclose{ :class => !expand_this && 'lastchild' }
+    .item-title{ :class => is_root && 'active' }
+      .row-fluid
+        -risky_attribute_tags = capture do
+          -if risky_attributes.size > 0
+            -risky_attributes.each_with_index do |ra, i|
+              %span.mini-risky-attribute{ :rel => 'tooltip', :title => ra.title }
+                =ra.slug
+                ="," unless i == risky_attributes.size - 1
+        =render :partial => 'object_leaf', :locals => { :instance => instance, :extra_description => risky_attribute_tags, :object_type => 'risk', :object_icon => 'grcicon-risk' }
+      .item-actions
+        -if is_editable
+          %a.btn.btn-mini{ "rel" => "tooltip", "data-placement" => "left", "title" => "Edit this object", 'data-modal-class' => 'modal-wide', 'data-form-target' => 'refresh', "data-toggle" => "modal-ajax-form", :href => url_for(:id => instance.id, :action => :edit, :controller => model_underscore.pluralize, :only_path => true) }
+            %i.grcicon-edit
+        %a.btn.btn-mini{ :href => list_edit_flow_control_risks_path(:risk_id => instance.id), :'data-toggle' => 'modal-ajax-relationship-selector', :'data-modal-reset' => 'reset', :'data-list-target' => 'refresh', :rel => 'tooltip', :title => 'Link controls to this risk', :'data-modal-class' => 'modal-wide' }
+          %i.grcicon-link
+        %a.btn.btn-mini{ "rel" => "tooltip", "data-placement" => "left", "title" => "Go to this object's page", :href => flow_risk_path(instance.id) }
+          %i.grcicon-goto
+  .item-content{ :class => is_root && 'in' }
+    -if controls.count > 0
+      %ul.tree-structure
+        -controls.each_with_index do |control, i|
+          -control_id_prefix = "#{id_prefix}-control-#{control.id}"
+          -control_summary_target = "#{control_id_prefix}-summary"
+
+          %li.control
+            .item-main
+              .openclose{ :class => 'lastchild' }
+              .item-title
+                .row-fluid
+                  =render :partial => 'object_leaf', :locals => { :instance => control, :object_type => 'compliance', :object_icon => 'grcicon-control' }
+                .item-actions
+                  %a.btn.btn-mini{"rel" => "tooltip", "data-placement" => "left", "title" => "Go to this object's page", :href => flow_control_path(control.id) }
+                    %i.grcicon-goto
+            .item-content

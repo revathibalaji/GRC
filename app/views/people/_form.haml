@@ -1,0 +1,38 @@
+-content_for :modal_title do
+  -if f.object.new_record?
+    Create a new person object
+  -else
+    Edit person object
+
+-if !f.object.new_record? && !f.object.account
+  -content_for :modal_delete_path, delete_flow_person_path(f.object)
+
+.row-fluid
+  .span3{ :class => error_class(f, :name) }
+    =f.label :name
+    =f.text_field :name, :class => 'span12', :placeholder => 'John Doe'
+    %br
+  .span3{ :class => error_class(f, :email) }
+    =f.label :email, "Email <span class='required'>*</span>".html_safe
+    =f.text_field :email, :class => 'span12', :placeholder => 'john@acme'
+    =error_messages_inline(f, :email)
+    %br
+  .span3{ :class => error_class(f, :language) }
+    %label{:for => 'person-language'} Language
+    %select#person-language.input-small{:name => 'person[language_id]', :value => nil}
+      -Option.options_for(:person_language).each do |o|
+        %option{ :value => o.id, :selected => (o.id == f.object.language_id) }=o.title
+    =error_messages_inline(f, :language)
+
+  .span2.disabled.fltrt{ :class => error_class(f, :status) }
+    %label Status
+    %input.span12{:placeholder => "Deprecated", :type => "text", :disabled => 'disabled'}
+
+.row-fluid
+  .span12{ :class => error_class(f, :company) }
+    =f.label :company
+    =f.text_field :company, :class => 'span12', :placeholder => 'Acme, Inc.'
+    =error_messages_inline(f, :company)
+    %br
+
+%br

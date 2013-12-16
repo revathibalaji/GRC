@@ -1,0 +1,43 @@
+-include_linked_programs = false if local_assigns[:include_linked_programs].nil?
+
+%ul.tree-structure.control
+  =walk_slug_tree(Directive.slugtree(controls), :li_class => 'control') do |item, step|
+    -content_id = "content_#{rand(36**8).to_s(36)}" # unique ID for toggle
+
+    .item-main
+      .openclose{ :class => 'lastchild' }
+      .item-title
+        .row-fluid
+          =render :partial => 'object_leaf', :locals => { :instance => item }
+
+          -if include_linked_programs
+            -programs = item.linked_programs.uniq
+            .span2
+              .objects-count
+                -popover_content = capture_haml do
+                  -if !programs.empty?
+                    %ul.tree-structure.simple
+                      -programs.each do |program|
+                        %li.program
+                          .item-main
+                            .item-title
+                              .row-fluid
+                                .span12
+                                  .oneline
+                                    %a{ :href => flow_program_path(program) }=program.title
+                  -else
+                    .rtf
+                      %p.no-data
+                        No programs are linked to this company control
+                -data_popover_trigger = { :placement => "right",
+                                     :'popover-trigger' =>  "sticky-hover",
+                                     :'original-title' => "<i class='grcicon-program-color'></i> Programs using #{item.slug}".html_safe,
+                                     :content => popover_content }
+                %a{ :data => data_popover_trigger }
+                  %i.grcicon-program-color
+                  =programs.size #not using count because count kicks off another query that returns an incorrect result
+        .item-actions
+          %a.btn.btn-mini.pull-right{ :href => flow_control_path(item), :rel => 'tooltip', :title => "Go to this object's page" }
+            %i.grcicon-goto
+          %a.btn.btn-mini.pull-right{ :href => edit_flow_control_path(item), :'data-toggle' => 'modal-ajax-form', :'data-modal-reset' => 'reset', :'data-dirty' => "#controls, #combo", :rel => 'tooltip', :title => 'Edit Control' }
+            %i.grcicon-edit

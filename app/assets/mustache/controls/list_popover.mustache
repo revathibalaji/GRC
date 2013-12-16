@@ -1,0 +1,36 @@
+{{^list}}
+  <div class="rtf" style="margin:20px">
+  {{#if na}}
+    <p class="no-data">
+      Controls are not applicable to this section
+    </p>
+  {{/if}}
+  {{#unless na}}
+    <p class="no-data">
+      No controls linked to this section
+    </p>
+  {{/unless}}
+  </div>
+{{/list}}
+{{#if list.length}}
+<ul class='tree-structure simple'>
+  {{#list}}
+  <li class='control'>
+    <div class='item-main'>
+      <div class='item-title'>
+        <div class='row-fluid'>
+          <div class='span12'>
+            <div class='oneline'>
+              <a href='/controls/{{id}}'>
+                <span class="title">{{title}}</span>
+                <span class="text-compliance">{{slug}}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </li>
+  {{/list}}
+</ul>
+{{/if}}
